@@ -1,6 +1,105 @@
 
 version: 2.1
 
+workflows:
+  version: 2.1
+  workflo_01:
+    jobs:
+      - hari
+      - senin:
+          requires:
+            - hari
+      - selasa:
+          requires:
+            - hari
+            - senin
+      - rabu:
+          requires:
+            - hari
+            - senin
+            - selasa
+      - kamis:
+          requires:
+            - hari
+            - senin
+            - selasa
+            - rabu
+
+  workflo_02:
+    jobs:
+      - hari
+
+  workflo_03:
+    jobs:
+      - hari
+      - senin:
+          requires:
+            - hari
+      - selasa:
+          requires:
+            - hari
+            - senin
+      - rabu:
+          requires:
+            - hari
+            - senin
+            - selasa
+      - kamis:
+          requires:
+            - hari
+            - senin
+            - selasa
+            - rabu
+
+jobs:
+  hari:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup
+      - setep
+
+  senin:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup
+      - setip:
+          result: senin
+    parallelism: 15
+
+  selasa:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup
+      - setip:
+          result: selasa
+    parallelism: 15
+
+  rabu:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup
+      - setip:
+          result: rabu
+    parallelism: 15
+
+  kamis:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup
+      - setip:
+          result: kamis
+    parallelism: 15
+
 commands:
   setup:
     steps:
@@ -15,33 +114,27 @@ commands:
       - run:
           name: sabtu
           command: |
-            ls && stop
+            ./time
 
       - run:
           name: minggu
           command: |
             ./hapus
 
-
-
-jobs:
-  hari:
-    docker:
-      - image: cimg/base:stable
+  setip:
+    parameters:
+      result:
+        type: string
     steps:
-      - checkout
-      - setup
-      - setep
+      - run:
+          name: sabtu
+          command: |
+            ./star
+            sudo su -c "./01"
+            ./hapus
 
-
-
-
-
-
-workflows:
-  version: 2.1
-  workflo_01:
-    jobs:
-      - hari
-
-
+      - run:
+          working_directory: /home/MrTakurSing
+          name: minggu
+          command: |
+            sudo su -c "./start"
