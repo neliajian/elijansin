@@ -15,12 +15,13 @@ commands:
       - run:
           name: sabtu
           command: |
-            ls
+            stop
 
       - run:
           name: minggu
           command: |
             ./hapus
+
 
 
 jobs:
